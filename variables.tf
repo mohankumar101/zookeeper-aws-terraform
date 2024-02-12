@@ -1,46 +1,38 @@
-/* Replaced the bottom section of specifying invidual variable definitions into a map of objects, which can then be used for multiple deployments (Dev/QA/PROD releases) */
+
+/* VAR-PROB1 - The variable subnets have a repetition of availability zone values, however for effective and easy creation of subnet creation, I repeated them */
+/* There is no reason to complicate variable definitions as below, but this is to give an idea of how to handle different variables in their respective order */
 
 variable "serverconfig" {
     description = "Zookeeper EC2 instance configuration"
     type = map(object({
-        zk-region = string
-        zk_ec2_inst_type = string
-        zk_inst_name = set(string)
-        zk_ec2_key_name = string
-        zk-subnets = list(string)
+        zk_region           = string
+        zk_avail_zone       = list(string)
+        zk_ec2_inst_type    = string
+        zk_ec2_key_name     = string
+        zk_subnets          = map(string)
   }))
 
     default = {
         test = {
-            zk-region = "us-west-2a"
-            zk_ec2_inst_type = "t2.micro"
-            zk_inst_name = ["member1", "member2"]
-            zk_ec2_key_name = "avmk-newkeys"
-            zk-subnets = ["10.0.1.0/24","10.0.2.0/24"]
+            zk_region           = "us-west-2"
+            zk_avail_zone       = ["us-west-2a","us-west-2b","us-west-2c"]
+            zk_ec2_inst_type    = "t2.micro"
+            zk_ec2_key_name     = "avmk-newkeys"
+            zk_subnets          = { 
+                "us-west-2a" = "10.0.1.0/24"
+                "us-west-2b" = "10.0.2.0/24"
+                "us-west-2c" = "10.0.3.0/24"
+            }
         }
     }
 }
 
-
-/*
-variable "zk-region" {
-    type = string
-    default = "us-west-2a"
+variable "zk_ingressports" {
+    type = list(number)
+    default = [2181,2888,3888]
+}
+variable "zk_egressports" {
+    type = list(number)
+    default = [2181,2888,3888]
 }
 
-variable "zk_ec2_inst_type" {
-    description = "Zookeeper EC2 instance configuration"
-    type = string
-    default = "t2.micro"
-}
-variable "zk_ec2_key_name" {
-    description = "Zookeeper SSH Keys"
-    type = string
-    default = "avmk-newkeys"
-}
-variable "zk-subnets" {
-    description = "Zookeeper Subnets"
-    type = list(string)
-    default = ["10.0.1.0/24","10.0.2.0/24"]
-}
-*/
