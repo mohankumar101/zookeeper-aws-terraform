@@ -23,7 +23,7 @@ resource "aws_instance" "zk_ec2" {
     for_each = toset(var.serverconfig.test.zk_avail_zone)
         ami                         = data.aws_ami.zk-ec2-amidata.id
         instance_type               = var.serverconfig.test.zk_ec2_inst_type
-        user_data                   = ""
+        user_data                   = file("./setup-zookeeper.sh")
         key_name                    = var.serverconfig.test.zk_ec2_key_name
         vpc_security_group_ids      = [ aws_security_group.allow_ssh.id, aws_security_group.allow_zk_traffic.id ]
         subnet_id                   = aws_subnet.zk_public_subnet[each.value].id

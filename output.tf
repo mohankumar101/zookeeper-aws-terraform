@@ -3,12 +3,12 @@ output "vpc_id" {
     value = aws_vpc.zk_test.id
 }
 
-output "instance_public_dns_list" {
-    description = "Zookeeper EC2 instance Public DNS"
-    value = [ for ec2_instance in aws_instance.zk_ec2: ec2_instance.public_dns ]
+output "instance_private_ip" {
+    description = "Zookeeper EC2 instance Public IP"
+    value = [ for ec2_instance in aws_instance.zk_ec2: ec2_instance.private_ip ]
 }
 
-output "instance_public_dns_map" {
+output "instance_private_dns_map" {
     description = "Zookeeper EC2 instance Public DNS"
     value = { for ec2_instance in aws_instance.zk_ec2: ec2_instance.id => ec2_instance.public_dns }
 }
