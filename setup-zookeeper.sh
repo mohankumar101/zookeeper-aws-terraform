@@ -1,5 +1,11 @@
 #!/bin/bash
 
+######
+# NOTE: At "Zookeeper config creation" step it will generate a working config for zookeeper, but there is a caveat. 
+# As for the ensemble member config, you would manually need to edit each member's config and include their private IP address so they can form up a quorum
+# Replace these values {output.ec2_instance*.private_ip} with your AWS EC2 instance private IP addresses
+######
+
 touch /var/tmp/setup.log
 
 # Disable interactive confirmations during library updates
@@ -72,6 +78,9 @@ if [ $? -eq 0 ]; then
 else
     echo "EBS block mounting failed" >> /var/tmp/setup.log
 fi
+
+
+#### Zookeeper configuration creation
 
 cat <<EOF > /opt/zookeeper/conf/zoo.cfg
 # The number of milliseconds of each tick
